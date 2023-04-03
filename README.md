@@ -10,6 +10,7 @@ npm run dev
 # or
 yarn dev
 ```
+- test login `username: testuser@mailinator.com` `password: test`
 
 ## Tech stack
 - Nextjs Framework
