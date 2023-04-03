@@ -17,6 +17,3 @@ yarn dev
 - Antd Design Dashboard
 - Axios
 - Swr
-
-## Deployment & Domain
-- App ini di deploy menggunakan [Vercel](https://vercel.com/) sehingga dapat diakses melalui link ini 
