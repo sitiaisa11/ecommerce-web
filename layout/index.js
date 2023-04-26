@@ -1,23 +1,65 @@
 import { useRouter } from 'next/router'
+import Link from 'next/link'
 import Head from 'next/head'
-import { Layout, theme, Typography, Space, Button, Badge } from 'antd'
+import {
+  Layout,
+  theme,
+  Typography,
+  Space,
+  Button,
+  Badge,
+  Dropdown,
+} from 'antd'
 import {
   ShoppingCartOutlined,
   LoginOutlined,
+  LogoutOutlined,
+  FileDoneOutlined,
 } from '@ant-design/icons'
 import { HookSwr } from '@/lib/hooks/HookSwr'
+import Cookies from 'js-cookie'
 
 const { Title } = Typography
 const { Header, Content } = Layout
 
 const LayoutApp = ({ children, isMobile }) => {
+  const isLogin = Cookies.get('token_user')
   const router = useRouter()
   const { data: userDetail, isLoading } = HookSwr({
     path: '/user/me',
   })
+  const { data: cart } = HookSwr({
+    path: '/pesanan/cart/count',
+    revalidate: true,
+  })
   const {
     token: { colorBgContainer, paddingMD },
   } = theme.useToken()
+
+  const onMenuClick = ({ key }) => {
+    router.push({ pathname: `/${key}` })
+  }
+
+  const items = [
+    {
+      key: 'pesanan',
+      label: (
+        <Space>
+          <FileDoneOutlined />
+          Pesanan
+        </Space>
+      ),
+    },
+    {
+      key: 'logout',
+      label: (
+        <Space>
+          <LogoutOutlined />
+          Logout
+        </Space>
+      ),
+    },
+  ]
 
   return (
     <>
@@ -50,13 +92,38 @@ const LayoutApp = ({ children, isMobile }) => {
             }}
           >
             <Title style={{ margin: 0, padding: 0 }} level={4}>
-              E-COMMERCE
+              <Link href="/" style={{ color: 'black' }}>
+                E-COMMERCE
+              </Link>
             </Title>
             <Space size="middle">
-              <Badge count={0} showZero>
-                <Button icon={<ShoppingCartOutlined />} />
+              <Badge count={cart?.data} showZero>
+                <Button
+                  icon={<ShoppingCartOutlined />}
+                  onClick={() =>
+                    router.push({ pathname: '/keranjang' })
+                  }
+                />
               </Badge>
-              <Button icon={<LoginOutlined />}>Masuk</Button>
+              {!isLogin ? (
+                <Button
+                  icon={<LoginOutlined />}
+                  onClick={() => router.push({ pathname: '/login' })}
+                >
+                  Masuk
+                </Button>
+              ) : (
+                <Dropdown.Button
+                  size="middle"
+                  loading={isLoading}
+                  menu={{
+                    items,
+                    onClick: onMenuClick,
+                  }}
+                >
+                  {!isMobile ? userDetail?.data?.email : ''}
+                </Dropdown.Button>
+              )}
             </Space>
           </Header>
           <Content

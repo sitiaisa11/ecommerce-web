@@ -13,3 +13,11 @@ body {
   -ms-overflow-style: none;  /* IE and Edge */
   scrollbar-width: none;  /* Firefox */
 }
+
+/* .demo-loadmore-list {
+  background: red;
+} */
+
+.ant-list-item-meta-title {
+  margin-top: 0;
+}

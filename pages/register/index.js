@@ -93,7 +93,7 @@ const Register = () => {
             padding: 0,
           }}
         >
-          Sistem
+          E-Commerce
         </p>
         <Form
           name="basic"

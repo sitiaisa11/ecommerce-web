@@ -44,6 +44,26 @@ export const logoutApi = async () => {
   }
 }
 
+export const mutationApi = async ({
+  method = 'POST',
+  payload,
+  endpoint,
+}) => {
+  try {
+    const result = await Axios({
+      method: method,
+      url: `${process.env.NEXT_PUBLIC_API}${endpoint}`,
+      data: payload,
+      headers: {
+        Authorization: `Bearer ${Cookies.get('token_user')}`,
+      },
+    })
+    return result
+  } catch (error) {
+    throw error
+  }
+}
+
 export const idrCurrency = (number) => {
   return new Intl.NumberFormat('id-ID', {
     style: 'currency',

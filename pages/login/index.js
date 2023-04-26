@@ -6,12 +6,8 @@ import { MailTwoTone, LockTwoTone } from '@ant-design/icons'
 import Cookies from 'js-cookie'
 import React, { useState } from 'react'
 import { authApi } from '@/helpers/utils'
-import { useRouter } from 'next/router'
-
-const cookie = require('cookie')
 
 const Login = () => {
-  const router = useRouter()
   const [isLoading, setIsLoading] = useState(false)
 
   const onFinish = (values) => {
@@ -34,7 +30,7 @@ const Login = () => {
             description: res?.data?.message,
             duration: 1,
           })
-          router.push({ pathname: '/' })
+          window.location.href = '/'
         }
       })
       .catch((err) => {
@@ -91,7 +87,7 @@ const Login = () => {
             padding: 0,
           }}
         >
-          Sistem
+          E-Commerce
         </p>
         <Form
           name="basic"
@@ -165,29 +161,6 @@ const Login = () => {
       </Card>
     </Row>
   )
-}
-
-export async function getServerSideProps(context) {
-  const { req, res } = context
-
-  let cookies
-  let authorization = null
-
-  if (req.headers.cookie) {
-    cookies = cookie.parse(req.headers.cookie)
-    authorization = cookies.token_user
-  }
-
-  if (authorization) {
-    res.writeHead(302, {
-      Location: `${process.env.NEXT_PUBLIC_ROOT_DOMAIN}`,
-    })
-    res.end()
-  }
-
-  return {
-    props: {},
-  }
 }
 
 export default Login

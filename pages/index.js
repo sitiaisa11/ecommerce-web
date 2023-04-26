@@ -1,11 +1,30 @@
 /* eslint-disable @next/next/no-img-element */
 import { useEffect, useState } from 'react'
-import { StarFilled } from '@ant-design/icons'
-import { Row, Col, Card, Button, Badge, Space } from 'antd'
+import {
+  StarFilled,
+  PaperClipOutlined,
+  ShoppingOutlined,
+} from '@ant-design/icons'
+import {
+  Row,
+  Col,
+  Card,
+  Button,
+  Badge,
+  Space,
+  notification,
+} from 'antd'
 import { HookSwrApi } from '@/lib/hooks/HookSwrApi'
-import { idrCurrency, discountPrice } from '@/helpers/utils'
+import { HookSwr } from '@/lib/hooks/HookSwr'
+import {
+  idrCurrency,
+  discountPrice,
+  mutationApi,
+} from '@/helpers/utils'
+import Cookies from 'js-cookie'
 
 export default function Home({ isMobile }) {
+  const isLogin = Cookies.get('token_user')
   const {
     data: dataProducts,
     isLoading,
@@ -14,8 +33,44 @@ export default function Home({ isMobile }) {
     path: '/produk',
     query: '?limit=12&page=1',
   })
+  const { reloadData: reloadDataCart } = HookSwr({
+    path: '/pesanan/cart/count',
+  })
   const [listProduct, setListProducts] = useState([])
   const [currentPage, setCurrentPage] = useState()
+
+  const addCart = ({ produk_id }) => {
+    mutationApi({
+      endpoint: '/pesanan/cart/add',
+      payload: {
+        produk_id,
+      },
+    })
+      .then((res) => {
+        reloadDataCart('')
+        notification.success({
+          message: 'Info',
+          description: res?.data?.message,
+          duration: 1,
+        })
+      })
+      .catch((err) => {
+        if ([400].includes(err?.response?.status)) {
+          notification.warning({
+            message: err?.response?.data?.message,
+            description: JSON.stringify(err?.response?.data?.data),
+            duration: 1,
+          })
+        }
+        if ([500].includes(err?.response?.status)) {
+          notification.error({
+            message: 'Error',
+            description: err?.response?.statusText,
+            duration: 1,
+          })
+        }
+      })
+  }
 
   useEffect(() => {
     if (dataProducts) {
@@ -83,8 +138,24 @@ export default function Home({ isMobile }) {
                           <StarFilled style={{ color: '#FFC400' }} />
                           {product?.rating}
                         </span>
+                        <span>
+                          <PaperClipOutlined />
+                          {product?.category}
+                        </span>
                       </Space>
                     </p>
+                    {isLogin && (
+                      <Button
+                        block
+                        icon={<ShoppingOutlined />}
+                        type="primary"
+                        onClick={() =>
+                          addCart({ produk_id: product?.id })
+                        }
+                      >
+                        Isi Keranjang
+                      </Button>
+                    )}
                   </>
                 }
               />

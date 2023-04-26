@@ -52,7 +52,7 @@ export async function getServerSideProps(context) {
 
   if (!authorization) {
     res.writeHead(302, {
-      Location: `${process.env.NEXT_PUBLIC_ROOT_DOMAIN}/login`,
+      Location: `${process.env.NEXT_PUBLIC_ROOT_DOMAIN}`,
     })
     res.end()
   }
