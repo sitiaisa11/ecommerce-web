@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { ConfigProvider } from 'antd'
 import Layout from '../layout'
 import Cookies from 'js-cookie'
 import '@/styles/globals.css'
@@ -22,12 +23,18 @@ export default function App({ Component, pageProps }) {
   }
 
   if (!isAuthorized) {
-    return <Component {...pageProps} isMobile={isMobile} />
+    return (
+      <ConfigProvider theme={{ token: { colorPrimary: '#0984e3' } }}>
+        <Component {...pageProps} isMobile={isMobile} />
+      </ConfigProvider>
+    )
   }
 
   return (
-    <Layout isMobile={isMobile}>
-      <Component {...pageProps} isMobile={isMobile} />
-    </Layout>
+    <ConfigProvider theme={{ token: { colorPrimary: '#0984e3' } }}>
+      <Layout isMobile={isMobile}>
+        <Component {...pageProps} isMobile={isMobile} />
+      </Layout>
+    </ConfigProvider>
   )
 }
