@@ -118,7 +118,7 @@ export default function Keranjang() {
       bordered={false}
       extra={
         <Space key="action-keranjang">
-          {data?.data.length > 0 && (
+          {data?.data?.length > 0 && (
             <Button
               icon={<CheckSquareOutlined />}
               onClick={() =>

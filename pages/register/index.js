@@ -13,7 +13,7 @@ import { useRouter } from 'next/router'
 
 const cookie = require('cookie')
 
-const Register = () => {
+const Register = ({ isMobile }) => {
   const router = useRouter()
   const [isLoading, setIsLoading] = useState(false)
 
@@ -75,7 +75,10 @@ const Register = () => {
         flexDirection: 'column',
       }}
     >
-      <Card bordered={false} style={{ width: '350px' }}>
+      <Card
+        bordered={false}
+        style={{ width: isMobile ? '100%' : '350px' }}
+      >
         <h2
           style={{
             textAlign: 'center',

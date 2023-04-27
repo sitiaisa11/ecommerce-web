@@ -15,6 +15,9 @@ import {
   LoginOutlined,
   LogoutOutlined,
   FileDoneOutlined,
+  UserAddOutlined,
+  HomeOutlined,
+  UserOutlined,
 } from '@ant-design/icons'
 import { HookSwr } from '@/lib/hooks/HookSwr'
 import Cookies from 'js-cookie'
@@ -93,36 +96,59 @@ const LayoutApp = ({ children, isMobile }) => {
           >
             <Title style={{ margin: 0, padding: 0 }} level={4}>
               <Link href="/" style={{ color: 'black' }}>
-                E-COMMERCE
+                {isMobile ? (
+                  <Button icon={<HomeOutlined />} />
+                ) : (
+                  'E-COMMERCE'
+                )}
               </Link>
             </Title>
             <Space size="middle">
-              <Badge count={cart?.data} showZero>
-                <Button
-                  icon={<ShoppingCartOutlined />}
-                  onClick={() =>
-                    router.push({ pathname: '/keranjang' })
-                  }
-                />
-              </Badge>
               {!isLogin ? (
-                <Button
-                  icon={<LoginOutlined />}
-                  onClick={() => router.push({ pathname: '/login' })}
-                >
-                  Masuk
-                </Button>
+                <>
+                  <Button
+                    icon={<LoginOutlined />}
+                    onClick={() =>
+                      router.push({ pathname: '/login' })
+                    }
+                  >
+                    Masuk
+                  </Button>
+                  <Button
+                    type="primary"
+                    icon={<UserAddOutlined />}
+                    onClick={() =>
+                      router.push({ pathname: '/register' })
+                    }
+                  >
+                    Register
+                  </Button>
+                </>
               ) : (
-                <Dropdown.Button
-                  size="middle"
-                  loading={isLoading}
-                  menu={{
-                    items,
-                    onClick: onMenuClick,
-                  }}
-                >
-                  {!isMobile ? userDetail?.data?.email : ''}
-                </Dropdown.Button>
+                <>
+                  <Badge count={cart?.data} showZero>
+                    <Button
+                      icon={<ShoppingCartOutlined />}
+                      onClick={() =>
+                        router.push({ pathname: '/keranjang' })
+                      }
+                    />
+                  </Badge>
+                  <Dropdown.Button
+                    size="middle"
+                    loading={isLoading}
+                    menu={{
+                      items,
+                      onClick: onMenuClick,
+                    }}
+                  >
+                    {!isMobile ? (
+                      userDetail?.data?.email
+                    ) : (
+                      <UserOutlined />
+                    )}
+                  </Dropdown.Button>
+                </>
               )}
             </Space>
           </Header>

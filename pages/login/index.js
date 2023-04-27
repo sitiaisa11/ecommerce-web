@@ -7,7 +7,7 @@ import Cookies from 'js-cookie'
 import React, { useState } from 'react'
 import { authApi } from '@/helpers/utils'
 
-const Login = () => {
+const Login = ({ isMobile }) => {
   const [isLoading, setIsLoading] = useState(false)
 
   const onFinish = (values) => {
@@ -69,7 +69,10 @@ const Login = () => {
         flexDirection: 'column',
       }}
     >
-      <Card bordered={false} style={{ width: '350px' }}>
+      <Card
+        bordered={false}
+        style={{ width: isMobile ? '100%' : '350px' }}
+      >
         <h2
           style={{
             textAlign: 'center',
