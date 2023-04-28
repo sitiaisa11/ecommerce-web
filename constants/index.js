@@ -1,8 +1,8 @@
 module.exports = {
   NUMBER_STATUS: {
-    hold: 1,
-    'waiting-payment': 2,
-    delivery: 3,
+    hold: 0,
+    'waiting-payment': 1,
+    delivery: 2,
     done: 4,
   },
 }

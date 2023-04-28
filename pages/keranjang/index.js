@@ -1,7 +1,9 @@
-import { Card, Table, Space, Button, notification } from 'antd'
+import { Card, Table, Space, Button, notification, Modal } from 'antd'
 import {
   CheckSquareOutlined,
   PlusSquareOutlined,
+  DeleteOutlined,
+  ExclamationCircleOutlined,
 } from '@ant-design/icons'
 import { HookSwr } from '@/lib/hooks/HookSwr'
 import { idrCurrency, mutationApi } from '@/helpers/utils'
@@ -13,6 +15,49 @@ export default function Keranjang() {
   const { reloadData: reloadDataCart } = HookSwr({
     path: '/pesanan/cart/count',
   })
+
+  const showConfirmDelete = ({ id }) => {
+    Modal.confirm({
+      title: 'Hapus produk',
+      content: <p>Kamu yakin akan menghapus produk ini ?</p>,
+      icon: <ExclamationCircleOutlined />,
+      okText: 'Ya, Hapus',
+      cancelText: 'Tidak',
+      onOk: () => {
+        mutationApi({
+          method: 'DELETE',
+          endpoint: `/pesanan/cart/delete/${id}`,
+        })
+          .then((res) => {
+            reloadData('')
+            notification.success({
+              message: 'Info',
+              description: res?.data?.message,
+              duration: 1,
+            })
+          })
+          .catch((err) => {
+            if ([400].includes(err?.response?.status)) {
+              notification.warning({
+                message: err?.response?.data?.message,
+                description: JSON.stringify(
+                  err?.response?.data?.data,
+                ),
+                duration: 1,
+              })
+            }
+            if ([500].includes(err?.response?.status)) {
+              notification.error({
+                message: 'Error',
+                description: err?.response?.statusText,
+                duration: 1,
+              })
+            }
+          })
+      },
+      onCancel: () => {},
+    })
+  }
 
   const processCart = ({ id }) => {
     mutationApi({
@@ -99,13 +144,19 @@ export default function Keranjang() {
     {
       title: 'Aksi',
       render: (item) => (
-        <Space direction="vertical">
+        <Space>
+          <Button
+            danger
+            type="primary"
+            icon={<DeleteOutlined />}
+            onClick={() => showConfirmDelete({ id: item?.id })}
+          />
           <Button
             type="primary"
             icon={<PlusSquareOutlined />}
             onClick={() => processCart({ id: item?.id })}
           >
-            Proses Pesanan
+            Beli
           </Button>
         </Space>
       ),
